@@ -264,11 +264,10 @@ int main() {
                 players[chat_id] = player;
             }
             else {
-                if(users[chat_id].state == UserState::INGAME){         
-                    if(users[chat_id].id == chat_id){
-                        bot.sendMessage(users[chat_id].id,users[chat_id].name + ": " +text);
-                    }
-                    
+                if(players[chat_id].user.state == UserState::INGAME){       
+                    for(const auto &[key,val] : players){
+                       bot.sendMessage(val.id,val.name + ": " +text); 
+                    }    
                 }else{
                         bot.sendMessage(chat_id,text + "؟");
                      }
