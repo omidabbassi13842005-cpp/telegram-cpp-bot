@@ -267,7 +267,9 @@ int main() {
                 if(users[chat_id].state == UserState::INGAME){
                     for(auto &[key,val] : users)
                     {
-                        bot.sendMessage(val.id,val.name + ": " +text);
+                        if(val.id == chat_id){
+                            bot.sendMessage(val.id,val.name + ": " +text);
+                        }
                     }
                 }else{
                         bot.sendMessage(chat_id,text + "؟");
