@@ -4,7 +4,7 @@
 #include <map>
 #include <curl/curl.h>
 #include <unistd.h>
-#include <nlohmann/json.hpp>
+#include "json.hpp"
 #include <regex>
 
 using json = nlohmann::json;
