@@ -188,7 +188,8 @@ public:
 
 enum class UserState {
     Idle,               
-    WaitingForNewMessage
+    WaitingForNewMessage,
+    INGAME
 };
 
 struct BotUser{
@@ -204,6 +205,14 @@ struct BotUser{
     BotUser() : id(""), name("بازیکن"), coins(0), scores(0), state(UserState::Idle) {}
 };
 
+struct BotPlayer{
+    BotUser user;
+    std::string role;
+    
+    BotPlayer(BotUser User, std::string Role):user(User),role(Role){}
+    BotPlayer() : user(), role("") {}
+};
+
 bool isValidFarsiName(const std::string& name) {
     if (name.length() < 3 || name.length() > 15) {
         return false;
@@ -214,10 +223,10 @@ bool isValidFarsiName(const std::string& name) {
 }
 
 
-
 int main() {
     Bot bot("8262579615:AAE97Hz7u-Qa0oUghu4JdfvR6xw2PbxipMU"); 
-    std::map<std::string, BotUser> users;
+    std::map<std::string,BotUser> users;
+    std::map<std::string,BotPlayer> players;
 
     while (true) {
         bot.fetchUpdatesOnce();
@@ -249,8 +258,20 @@ int main() {
                 std::string profile = "پروفایل بازیکن👤\n\n💢 آیدی: " + msg.chat_id + "\n✏ نام: " + users[msg.chat_id].name + "\n💰 سکه: " + std::to_string(users[msg.chat_id].coins) + "\n⭐ امتیاز: " + std::to_string(users[msg.chat_id].scores);
                 bot.sendGlassBtnMessage(chat_id,profile,{{"تغییر نام", "changeName"},{"تنظیمات بیشتر", "setting"}});
             }
+            else if(text == "/startgame"){
+                users[chat_id].state = UserState::INGAME;
+                BotPlayer player(users[chat_id],"doctor");
+                players[chat_id] = player;
+            }
             else {
-                bot.sendMessage(chat_id,text + "؟");
+                if(users[chat_id].state == UserState::INGAME){
+                    for(auto &[key,val] : users)
+                    {
+                        bot.sendMessage(val.id,val.name + ": " +text);
+                    }
+                }else{
+                        bot.sendMessage(chat_id,text + "؟");
+                     }
             }
         }
 
