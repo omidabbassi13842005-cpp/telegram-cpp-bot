@@ -5,6 +5,7 @@
 #include <curl/curl.h>
 #include <unistd.h>
 #include <nlohmann/json.hpp>
+#include <regex>
 
 using json = nlohmann::json;
 
@@ -207,16 +208,11 @@ bool isValidFarsiName(const std::string& name) {
     if (name.length() < 3 || name.length() > 15) {
         return false;
     }
-    
-    for (char c : name) {
-        unsigned char uc = static_cast<unsigned char>(c);
-        if (uc < 0xD8 || uc > 0xDB) {
-            return false;
-        }
-    }
-    
-    return true;
+
+    std::regex farsiRegex(u8"^[\u0600-\u06FF]+$");
+    return std::regex_match(name, farsiRegex);
 }
+
 
 
 int main() {
