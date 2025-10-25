@@ -263,15 +263,21 @@ int main() {
                 BotPlayer player(users[chat_id],"doctor");
                 players[chat_id] = player;
             }
+        }
             else {
-                if(players[chat_id].user.state == UserState::INGAME){       
-                    for(const auto &[key,val] : players){
-                       bot.sendMessage(val.user.id,val.user.name + ": " +text); 
-                    }    
-                }else{
-                        bot.sendMessage(chat_id,text + "؟");
-                     }
+    if (users[chat_id].state == UserState::INGAME) {
+        std::string senderName = users[chat_id].name;
+        std::string formattedMessage = senderName + ": " + text;
+
+        for (const auto& [key, val] : users) {
+            if (val.state == UserState::INGAME) {
+                bot.sendMessage(val.id, formattedMessage);
             }
+        }
+    } else {
+        bot.sendMessage(chat_id, text + "؟");
+    }
+
         }
 
         for (const auto& cb : bot.receivedCallbacks) {
