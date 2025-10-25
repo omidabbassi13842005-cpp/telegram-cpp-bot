@@ -266,7 +266,7 @@ int main() {
             else {
                 if(players[chat_id].user.state == UserState::INGAME){       
                     for(const auto &[key,val] : players){
-                       bot.sendMessage(val.id,val.name + ": " +text); 
+                       bot.sendMessage(val.user.id,val.user.name + ": " +text); 
                     }    
                 }else{
                         bot.sendMessage(chat_id,text + "؟");
